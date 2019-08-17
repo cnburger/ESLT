@@ -1,9 +1,10 @@
-library(MASS) #to use the functions import this library
 
 
 GaussianMixture <- function(N = 10,mu1 = c(1,0),mu2 = c(0,1),sigma1 = matrix(c(1,0,0,1), ncol = 2),
                             sigma2 = matrix(c(1,0,0,1), ncol = 2)/5, amt_rows = 100 )
 {
+  library(MASS) #to use the functions import this library
+  
   #PARAMATERS:
   #N (int): The number of elements to sample from 
   #mu1 (float): Mean of Gaussian 1
@@ -47,8 +48,9 @@ GaussianMixture <- function(N = 10,mu1 = c(1,0),mu2 = c(0,1),sigma1 = matrix(c(1
   data1 = cbind(new_obs1, 0)
   data2 = cbind(new_obs2, 1)
   #One big dataset
-  dataset <- rbind((data1),(data2))
-  dataset <- as.matrix(dataset)
+  dataset <- rbind(as.numeric(data1),as.numeric(data2)) #numeric data
+  dataset <- matrix(c(dataset), ncol = 3)
+  colnames(dataset) <- c('X1','X2','Y') #new headers
   
   return(dataset)
 }
