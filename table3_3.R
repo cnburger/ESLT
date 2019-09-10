@@ -32,6 +32,27 @@ var(train_scaled)
 ######
 ######
 ######
+######-----------------------LS--------------------------------
+######
+######
+######
+
+
+linear.model <- lm(response ~., data =train_scaled) #creating a linear model
+summary(linear.model) #see coefficients & errors
+
+
+#Test Error
+predictedLS <- predict(linear.model,test_scaled)
+mean((predictedLS -test_scaled$test_response)^2)
+
+
+#Std error: variance/sqrt(n - p)  #final model has 2 parameters
+var(predictedLS)/sqrt(length(predictedLS)-length(coef(linear.model)))
+
+###### 01
+######
+######
 ######-----------------------BEST SUBSET--------------------------------
 ######
 ######
@@ -49,6 +70,9 @@ reg.sum <- summary(regfit.full)
 
 #Set 2 is the same as in the book
 coef(regfit.full,2)
+
+predict(regfit.full)
+?predict
 
 #Names of the coefficients
 names(reg.sum)
@@ -96,6 +120,20 @@ criterion.plots()
 #Final coefficients based on BIC
 coef(regfit.full,2)
 
+#BEST FIT = 2 
+
+#TEST ERROR
+best.fit = regsubsets(response~., data = train_scaled[,c('lcavol','lweight')])
+best.sub.beta0 <- as.numeric(coef(regfit.full,2)[1])
+best.sub.beta1 <- as.numeric(coef(regfit.full,2)[2])
+best.sub.beta2 <- as.numeric(coef(regfit.full,2)[3])
+
+best.sub.predictedY <- best.sub.beta0 + best.sub.beta1*test_scaled$lcavol + best.sub.beta2*test_scaled$lweight
+
+best.sub.TESTERROR <- mean((best.sub.predictedY-test_scaled$test_response)^2)
+best.sub.TESTERROR
+#Std erro: variance/sqrt(n - p)  #final model has 2 parameters + Intercept
+var(best.sub.predictedY)/sqrt(length(best.sub.predictedY)-3)
 
 ######
 ######
@@ -163,7 +201,6 @@ ridge.parameters <- predict(ridge.out, type = "coefficients", s = bestlam.ridge,
 ridge.parameters
 
 #Std erro: variance/sqrt(n - p - 1) #the extra -1 is for the lambda in ridge
-
 var(ridge.pred)/sqrt(length(ridge.pred)-length(ridge.parameters)-1)
 #0.1168568
 
@@ -198,7 +235,8 @@ mean((lasso.pred - y.test)^2)
 #Extracting the coefficients
 out.lasso <- glmnet(x.lasso,y,alpha =1, lambda = grid)
 lasso.coef = predict(out.lasso, type = "coefficients", s = bestlam.lasso)
-lasso.coef[1:5,]
+lasso.coef
 
 var(lasso.pred)/sqrt(length(lasso.pred)-length(lasso.coef)-1)
 #0.1150187
+
