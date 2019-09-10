@@ -13,8 +13,9 @@ GaussianMixture <- function(N = 10,mu1 = c(1,0),mu2 = c(0,1),sigma1 = matrix(c(1
   #sigma2: Covariance new data generations values that will be sampled fro the original gaussians above
   #amt_rows: The amount of rows of the generated dataseet
   #Generate N means
-  means_1_vec <- mvrnorm(N, mu =mu1, Sigma = sigma)
-  means_2_vec <- mvrnorm(N, mu =mu2, Sigma = sigma)
+  means_1_vec <- mvrnorm(N, mu =mu1, Sigma = sigma1)
+  means_2_vec <- mvrnorm(N, mu =mu2, Sigma = sigma2)
+  
   
 
   
@@ -54,4 +55,5 @@ GaussianMixture <- function(N = 10,mu1 = c(1,0),mu2 = c(0,1),sigma1 = matrix(c(1
   
   return(dataset)
 }
+
 GaussianMixture()
